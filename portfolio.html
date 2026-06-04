@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio d'orientation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --ink-soft: #4a4a5e;
+    --paper: #fefcf8;
+    --paper-warm: #faf7f0;
+    --line: #d8d4c8;
+    --gold: #b8935a;
+    --gold-soft: #d4b48a;
+    --accent: #5a6e8c;
+    --highlight: #f4ead8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #efebe2;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 30px 20px;
+    line-height: 1.6;
+  }
+  body[dir="rtl"] { font-family: 'Cairo', 'Inter', sans-serif; }
+
+  /* TOOLBAR */
+  .toolbar {
+    max-width: 850px;
+    margin: 0 auto 25px;
+    background: white;
+    border-radius: 14px;
+    padding: 14px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .lang-switcher { display: flex; gap: 6px; }
+  .lang-btn {
+    background: var(--paper-warm);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    color: var(--ink-soft);
+  }
+  .lang-btn:hover { background: var(--highlight); }
+  .lang-btn.active {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+  .print-btn {
+    background: var(--gold);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .print-btn:hover { background: #a07d44; }
+  .print-btn:disabled { background: var(--line); cursor: not-allowed; }
+
+  /* PORTFOLIO */
+  .portfolio {
+    max-width: 850px;
+    margin: 0 auto;
+    background: var(--paper);
+    padding: 60px 65px;
+    border-radius: 4px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    position: relative;
+    min-height: 1100px;
+  }
+  .portfolio::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border: 1px solid var(--line);
+    margin: 18px;
+    pointer-events: none;
+    border-radius: 2px;
+  }
+
+  /* MASTHEAD */
+  .masthead {
+    text-align: center;
+    border-bottom: 3px double var(--ink);
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+  }
+  .masthead .eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  body[dir="rtl"] .masthead .eyebrow { letter-spacing: 2px; }
+  .masthead h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 42px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -1px;
+    margin-bottom: 6px;
+  }
+  body[dir="rtl"] .masthead h1 { font-family: 'Cairo', sans-serif; }
+  .masthead .date {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-style: italic;
+    letter-spacing: 1px;
+  }
+
+  /* IDENTITY */
+  .identity {
+    background: var(--paper-warm);
+    border: 1px solid var(--line);
+    padding: 22px 28px;
+    margin-bottom: 36px;
+    border-radius: 2px;
+  }
+  .identity-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 30px;
+  }
+  .identity-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .identity-item .lbl {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .identity-item .val {
+    font-family: 'Fraunces', serif;
+    font-size: 19px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  body[dir="rtl"] .identity-item .val { font-family: 'Cairo', sans-serif; }
+
+  /* SECTION */
+  .section { margin-bottom: 34px; }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-num {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    color: var(--gold);
+    font-weight: 600;
+    line-height: 1;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: var(--ink);
+    font-weight: 600;
+    flex-grow: 1;
+  }
+  body[dir="rtl"] .section-title,
+  body[dir="rtl"] .section-num { font-family: 'Cairo', sans-serif; }
+
+  /* CHOICES with images */
+  .choices-block { margin-bottom: 18px; }
+  .choices-label {
+    font-size: 12px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .choices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 10px;
+  }
+  .choice {
+    background: var(--paper-warm);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  .choice img {
+    width: 100%;
+    height: 70px;
+    object-fit: contain;
+    margin-bottom: 8px;
+    border-radius: 4px;
+  }
+  .choice .name {
+    font-size: 12px;
+    color: var(--ink);
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  /* TEXT LIST (when no images) */
+  .text-list { margin-bottom: 18px; }
+  .text-list .label {
+    font-size: 12px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .text-list ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  .text-list li {
+    padding: 6px 0 6px 18px;
+    position: relative;
+    font-size: 15px;
+    color: var(--ink);
+    border-bottom: 1px dotted var(--line);
+  }
+  .text-list li:last-child { border-bottom: none; }
+  .text-list li::before {
+    content: '◆';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 10px;
+    top: 11px;
+  }
+  body[dir="rtl"] .text-list li {
+    padding: 6px 18px 6px 0;
+  }
+  body[dir="rtl"] .text-list li::before {
+    left: auto;
+    right: 0;
+  }
+
+  /* TOP 3 BLOCK */
+  .top3 {
+    background: var(--paper-warm);
+    border: 1px solid var(--line);
+    padding: 22px 26px;
+    border-radius: 2px;
+    margin-bottom: 14px;
+  }
+  .top3-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 14px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .top3-list {
+    display: flex;
+    justify-content: space-around;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .top3-item {
+    flex: 1;
+    min-width: 140px;
+    text-align: center;
+    padding: 14px 12px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    position: relative;
+  }
+  .top3-item .medal {
+    font-size: 32px;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .top3-item .name {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    color: var(--ink);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  body[dir="rtl"] .top3-item .name { font-family: 'Cairo', sans-serif; }
+  .top3-item .score {
+    font-size: 12px;
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  /* PROFESSIONAL */
+  .pro-yes-no {
+    display: inline-block;
+    padding: 4px 14px;
+    background: var(--ink);
+    color: white;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-left: 8px;
+  }
+  body[dir="rtl"] .pro-yes-no { margin-left: 0; margin-right: 8px; }
+
+  /* LOADING / ERROR */
+  .loading, .error {
+    text-align: center;
+    padding: 60px 20px;
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    color: var(--ink-soft);
+  }
+  .error {
+    color: #c44a4a;
+    background: #fdf2f2;
+    border-radius: 8px;
+    padding: 30px;
+    margin: 20px;
+  }
+  .error code {
+    display: block;
+    margin-top: 14px;
+    padding: 12px;
+    background: white;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    overflow-wrap: break-word;
+    font-family: monospace;
+  }
+
+  /* PRINT */
+  @media print {
+    body { background: white; padding: 0; }
+    .toolbar { display: none; }
+    .portfolio {
+      box-shadow: none;
+      max-width: 100%;
+      padding: 30px 40px;
+      min-height: auto;
+    }
+    .portfolio::before { display: none; }
+    .section { page-break-inside: avoid; }
+    .choice img { height: 50px; }
+    @page { margin: 1.5cm; size: A4; }
+  }
+
+  @media (max-width: 600px) {
+    .portfolio { padding: 30px 24px; }
+    .masthead h1 { font-size: 30px; }
+    .identity-grid { grid-template-columns: 1fr; }
+    .choices-grid { grid-template-columns: repeat(2, 1fr); }
+    .top3-list { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="lang-switcher">
+    <button class="lang-btn active" data-lang="fr">🇫🇷 Français</button>
+    <button class="lang-btn" data-lang="ar">🇸🇦 العربية</button>
+    <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+  </div>
+  <button class="print-btn" onclick="window.print()">🖨️ <span id="print-label">Imprimer / PDF</span></button>
+</div>
+
+<div id="content">
+  <div class="loading">⏳ Chargement des données...</div>
+</div>
+
+<script>
+// ============================================================
+// CONFIGURATION — REMPLACEZ CES 2 VALEURS PAR LES VÔTRES
+// ============================================================
+const API_KEY = "9cbd77eba6bfd784d9b13b9041f4c593";
+const FORM_ID = "261413229737054";
+// ============================================================
+
+// ============================================================
+// TRADUCTIONS DES TITRES ET LIBELLÉS (FR / AR / EN)
+// ============================================================
+const T = {
+  fr: {
+    eyebrow: "Bilan d'orientation",
+    title: "Portfolio d'orientation",
+    name: "Nom et prénom",
+    age: "Âge",
+    school: "Association",
+    date: "Délivré le",
+    section1_num: "I",
+    section1: "Mon profil personnel",
+    section2_num: "II",
+    section2: "Mes intérêts professionnels (RIASEC)",
+    section3_num: "III",
+    section3: "Mes intelligences",
+    section4_num: "IV",
+    section4: "Formation professionnelle",
+    characteristics: "Mes caractéristiques",
+    domains: "Mes domaines d'intérêt",
+    skills: "Mes compétences",
+    values: "Mes valeurs",
+    realisations: "Mes réalisations",
+    top3_riasec: "Mon top 3 RIASEC",
+    top3_intel: "Mon top 3 intelligences",
+    interested: "Intéressé(e) par une formation",
+    chosen_formations: "Formations choisies",
+    knows_pro: "Connaît un professionnel",
+    print: "Imprimer / PDF",
+    riasec: { R: "Réaliste", I: "Investigateur", A: "Artistique", S: "Social", E: "Entrepreneur", C: "Conventionnel" },
+    intel: { ling: "Linguistique", log: "Logico-mathématique", spat: "Spatiale", mus: "Musicale", kin: "Kinesthésique", inter: "Interpersonnelle", intra: "Intrapersonnelle", nat: "Naturaliste" },
+    yes: "Oui",
+    no: "Non",
+    loading: "Chargement des données...",
+    error_no_id: "Aucun ID de soumission fourni. Ajoutez ?id=NUMEROsoumission à l'URL.",
+    error_api: "Erreur lors du chargement des données",
+    no_selection: "Aucune sélection"
+  },
+  ar: {
+    eyebrow: "تقرير التوجيه",
+    title: "ملف التوجيه المهني",
+    name: "الاسم واللقب",
+    age: "العمر",
+    school: "الجمعية",
+    date: "صدر بتاريخ",
+    section1_num: "١",
+    section1: "ملفي الشخصي",
+    section2_num: "٢",
+    section2: "اهتماماتي المهنية (RIASEC)",
+    section3_num: "٣",
+    section3: "ذكاءاتي",
+    section4_num: "٤",
+    section4: "التدريب المهني",
+    characteristics: "صفاتي",
+    domains: "مجالات اهتمامي",
+    skills: "مهاراتي",
+    values: "قيمي",
+    realisations: "إنجازاتي",
+    top3_riasec: "أعلى ٣ في RIASEC",
+    top3_intel: "أعلى ٣ ذكاءات",
+    interested: "مهتم بدورة تدريبية",
+    chosen_formations: "التدريبات المختارة",
+    knows_pro: "يعرف شخصًا في هذه المهنة",
+    print: "طباعة / PDF",
+    riasec: { R: "واقعي", I: "باحث", A: "فنّان", S: "اجتماعي", E: "مغامر", C: "تقليدي" },
+    intel: { ling: "لغوي", log: "منطقي - رياضي", spat: "مكاني", mus: "موسيقي", kin: "حركي", inter: "تواصلي", intra: "ذاتي", nat: "طبيعي" },
+    yes: "نعم",
+    no: "لا",
+    loading: "جارٍ تحميل البيانات...",
+    error_no_id: "لم يتم توفير معرّف الإرسال. أضف ?id=رقم_الإرسال إلى الرابط.",
+    error_api: "خطأ في تحميل البيانات",
+    no_selection: "لا يوجد اختيار"
+  },
+  en: {
+    eyebrow: "Orientation Report",
+    title: "Career Orientation Portfolio",
+    name: "Full name",
+    age: "Age",
+    school: "Association",
+    date: "Issued on",
+    section1_num: "I",
+    section1: "My personal profile",
+    section2_num: "II",
+    section2: "My career interests (RIASEC)",
+    section3_num: "III",
+    section3: "My intelligences",
+    section4_num: "IV",
+    section4: "Professional training",
+    characteristics: "My characteristics",
+    domains: "My areas of interest",
+    skills: "My skills",
+    values: "My values",
+    realisations: "My achievements",
+    top3_riasec: "My top 3 RIASEC",
+    top3_intel: "My top 3 intelligences",
+    interested: "Interested in training",
+    chosen_formations: "Selected trainings",
+    knows_pro: "Knows a professional",
+    print: "Print / PDF",
+    riasec: { R: "Realistic", I: "Investigative", A: "Artistic", S: "Social", E: "Enterprising", C: "Conventional" },
+    intel: { ling: "Linguistic", log: "Logical-mathematical", spat: "Spatial", mus: "Musical", kin: "Kinesthetic", inter: "Interpersonal", intra: "Intrapersonal", nat: "Naturalist" },
+    yes: "Yes",
+    no: "No",
+    loading: "Loading data...",
+    error_no_id: "No submission ID provided. Add ?id=submissionNumber to the URL.",
+    error_api: "Error loading data",
+    no_selection: "No selection"
+  }
+};
+
+// ============================================================
+// MAPPING DES CHAMPS JOTFORM (Unique Names dans votre formulaire)
+// ============================================================
+const FIELDS = {
+  name: "Pr_nom_et_Nom",
+  age: "age",
+  school: "nomdeLassociation",
+  characteristics: "ltstronggtparmiLes",
+  domains: "ltstronggtchoisisLes",
+  skills: "ltstronggtchoisisLes21",
+  values: "ltstronggtparmiLes22",
+  realisations: "ltstronggtlesRealisationsltstronggt",
+  // Scores RIASEC
+  score_R: "score_R",
+  score_I: "score_I",
+  score_A: "score_A",
+  score_S: "score_S",
+  score_E: "score_E",
+  score_C: "score_C",
+  // Scores Intelligences
+  score_ling: "score_linguistique",
+  score_log: "score_logique",
+  score_spat: "score_spatiale",
+  score_mus: "score_musicale",
+  score_kin: "score_kinesthesique",
+  score_inter: "score_interpersonnelle",
+  score_intra: "score_intrapersonnelle",
+  score_nat: "score_naturaliste",
+  // Formation
+  interested: "formationProfessionnelle",
+  formations: "parmiCes",
+  knows_pro: "connaistuQuelquun"
+};
+
+// ============================================================
+// ÉTAT GLOBAL
+// ============================================================
+let submissionData = null;
+let currentLang = 'fr';
+
+// ============================================================
+// CHARGEMENT DES DONNÉES
+// ============================================================
+async function loadSubmission() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const submissionId = urlParams.get('id');
+  const t = T[currentLang];
+
+  if (!submissionId) {
+    showError(t.error_no_id);
+    return;
+  }
+
+  try {
+    const url = `https://api.jotform.com/submission/${submissionId}?apiKey=${API_KEY}`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('API error ' + response.status);
+    const data = await response.json();
+    if (data.responseCode !== 200) throw new Error(data.message || 'Unknown error');
+    submissionData = data.content;
+    render();
+  } catch (err) {
+    showError(t.error_api + ': ' + err.message);
+  }
+}
+
+function showError(message) {
+  document.getElementById('content').innerHTML = `
+    <div class="error">
+      <strong>⚠️ ${message}</strong>
+      <code>${window.location.href}</code>
+    </div>
+  `;
+}
+
+// ============================================================
+// EXTRACTION DES DONNÉES D'UN CHAMP
+// ============================================================
+function getFieldValue(uniqueName) {
+  if (!submissionData || !submissionData.answers) return null;
+  for (const key in submissionData.answers) {
+    const ans = submissionData.answers[key];
+    if (ans.name === uniqueName) return ans;
+  }
+  return null;
+}
+
+function getText(uniqueName) {
+  const f = getFieldValue(uniqueName);
+  if (!f) return '';
+  return f.answer || f.prettyFormat || '';
+}
+
+function getNumber(uniqueName) {
+  const v = getText(uniqueName);
+  return v ? parseInt(v) || 0 : 0;
+}
+
+// Récupère un tableau de choix multi avec leurs images
+function getChoicesWithImages(uniqueName) {
+  const f = getFieldValue(uniqueName);
+  if (!f) return [];
+  let answers = f.answer;
+  if (typeof answers === 'string') answers = [answers];
+  if (!Array.isArray(answers)) answers = Object.values(answers || {});
+
+  // Tentative d'extraction des images depuis prettyFormat (HTML)
+  const pretty = f.prettyFormat || '';
+  const imgMap = {};
+  if (pretty) {
+    // Regex robuste pour extraire les src d'images et leurs labels
+    const re = /<img[^>]*src="([^"]+)"[^>]*><\/td>\s*<td[^>]*>([^<]+)/g;
+    let m;
+    while ((m = re.exec(pretty)) !== null) {
+      imgMap[m[2].trim()] = m[1];
+    }
+  }
+
+  return answers.map(a => ({
+    name: String(a).trim(),
+    img: imgMap[String(a).trim()] || null
+  }));
+}
+
+// ============================================================
+// CALCUL DU TOP 3
+// ============================================================
+function computeTop3(scoresArray) {
+  // scoresArray: [ { key:'R', label:'Réaliste', value:5 }, ... ]
+  return scoresArray
+    .filter(s => s.value > 0)
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 3);
+}
+
+// ============================================================
+// RENDU PRINCIPAL
+// ============================================================
+function render() {
+  const t = T[currentLang];
+  document.documentElement.lang = currentLang;
+  document.body.dir = (currentLang === 'ar') ? 'rtl' : 'ltr';
+  document.getElementById('print-label').textContent = t.print;
+
+  const today = new Date().toLocaleDateString(
+    currentLang === 'ar' ? 'ar-EG' : (currentLang === 'en' ? 'en-US' : 'fr-FR'),
+    { day: 'numeric', month: 'long', year: 'numeric' }
+  );
+
+  // RIASEC scores
+  const riasecScores = [
+    { key: 'R', label: t.riasec.R, value: getNumber(FIELDS.score_R) },
+    { key: 'I', label: t.riasec.I, value: getNumber(FIELDS.score_I) },
+    { key: 'A', label: t.riasec.A, value: getNumber(FIELDS.score_A) },
+    { key: 'S', label: t.riasec.S, value: getNumber(FIELDS.score_S) },
+    { key: 'E', label: t.riasec.E, value: getNumber(FIELDS.score_E) },
+    { key: 'C', label: t.riasec.C, value: getNumber(FIELDS.score_C) }
+  ];
+  const topRiasec = computeTop3(riasecScores);
+
+  // Intelligences scores
+  const intelScores = [
+    { key: 'ling', label: t.intel.ling, value: getNumber(FIELDS.score_ling) },
+    { key: 'log', label: t.intel.log, value: getNumber(FIELDS.score_log) },
+    { key: 'spat', label: t.intel.spat, value: getNumber(FIELDS.score_spat) },
+    { key: 'mus', label: t.intel.mus, value: getNumber(FIELDS.score_mus) },
+    { key: 'kin', label: t.intel.kin, value: getNumber(FIELDS.score_kin) },
+    { key: 'inter', label: t.intel.inter, value: getNumber(FIELDS.score_inter) },
+    { key: 'intra', label: t.intel.intra, value: getNumber(FIELDS.score_intra) },
+    { key: 'nat', label: t.intel.nat, value: getNumber(FIELDS.score_nat) }
+  ];
+  const topIntel = computeTop3(intelScores);
+
+  // Choices with images
+  const characteristics = getChoicesWithImages(FIELDS.characteristics);
+  const domains = getChoicesWithImages(FIELDS.domains);
+  const skills = getChoicesWithImages(FIELDS.skills);
+  const values = getChoicesWithImages(FIELDS.values);
+  const realisations = getChoicesWithImages(FIELDS.realisations);
+  const formations = getChoicesWithImages(FIELDS.formations);
+
+  const interested = getText(FIELDS.interested);
+  const knowsPro = getText(FIELDS.knows_pro);
+
+  const html = `
+    <div class="portfolio">
+      <header class="masthead">
+        <div class="eyebrow">${t.eyebrow}</div>
+        <h1>${t.title}</h1>
+        <div class="date">${t.date} ${today}</div>
+      </header>
+
+      <div class="identity">
+        <div class="identity-grid">
+          <div class="identity-item">
+            <span class="lbl">${t.name}</span>
+            <span class="val">${getText(FIELDS.name) || '—'}</span>
+          </div>
+          <div class="identity-item">
+            <span class="lbl">${t.age}</span>
+            <span class="val">${getText(FIELDS.age) || '—'}</span>
+          </div>
+          <div class="identity-item" style="grid-column: 1/-1">
+            <span class="lbl">${t.school}</span>
+            <span class="val">${getText(FIELDS.school) || '—'}</span>
+          </div>
+        </div>
+      </div>
+
+      <section class="section">
+        <div class="section-header">
+          <span class="section-num">${t.section1_num}</span>
+          <span class="section-title">${t.section1}</span>
+        </div>
+        ${renderChoicesBlock(t.characteristics, characteristics, t.no_selection)}
+        ${renderChoicesBlock(t.domains, domains, t.no_selection)}
+        ${renderChoicesBlock(t.skills, skills, t.no_selection)}
+        ${renderChoicesBlock(t.values, values, t.no_selection)}
+        ${renderChoicesBlock(t.realisations, realisations, t.no_selection)}
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <span class="section-num">${t.section2_num}</span>
+          <span class="section-title">${t.section2}</span>
+        </div>
+        ${renderTop3(t.top3_riasec, topRiasec)}
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <span class="section-num">${t.section3_num}</span>
+          <span class="section-title">${t.section3}</span>
+        </div>
+        ${renderTop3(t.top3_intel, topIntel)}
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <span class="section-num">${t.section4_num}</span>
+          <span class="section-title">${t.section4}</span>
+        </div>
+        <div class="choices-block">
+          <div class="choices-label">${t.interested}</div>
+          <div style="padding: 8px 0 12px;">
+            <span class="pro-yes-no">${interested || '—'}</span>
+          </div>
+        </div>
+        ${formations.length > 0 ? renderChoicesBlock(t.chosen_formations, formations, t.no_selection) : ''}
+        <div class="choices-block">
+          <div class="choices-label">${t.knows_pro}</div>
+          <div style="padding: 8px 0;">
+            <span class="pro-yes-no">${knowsPro || '—'}</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  `;
+
+  document.getElementById('content').innerHTML = html;
+}
+
+function renderChoicesBlock(label, items, emptyMessage) {
+  if (!items || items.length === 0) {
+    return `
+      <div class="choices-block">
+        <div class="choices-label">${label}</div>
+        <p style="color: var(--ink-soft); font-style: italic; font-size: 14px;">${emptyMessage}</p>
+      </div>
+    `;
+  }
+  const withImages = items.some(it => it.img);
+  if (withImages) {
+    return `
+      <div class="choices-block">
+        <div class="choices-label">${label}</div>
+        <div class="choices-grid">
+          ${items.map(it => `
+            <div class="choice">
+              ${it.img ? `<img src="${it.img}" alt="${it.name}" onerror="this.style.display='none'">` : ''}
+              <div class="name">${it.name}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+  // Pas d'images → liste texte
+  return `
+    <div class="text-list">
+      <div class="label">${label}</div>
+      <ul>${items.map(it => `<li>${it.name}</li>`).join('')}</ul>
+    </div>
+  `;
+}
+
+function renderTop3(title, top3) {
+  if (!top3 || top3.length === 0) {
+    return `<p style="color: var(--ink-soft); font-style: italic;">${T[currentLang].no_selection}</p>`;
+  }
+  const medals = ['🥇', '🥈', '🥉'];
+  return `
+    <div class="top3">
+      <div class="top3-title">${title}</div>
+      <div class="top3-list">
+        ${top3.map((s, i) => `
+          <div class="top3-item">
+            <span class="medal">${medals[i]}</span>
+            <div class="name">${s.label}</div>
+            <div class="score">${s.value} pts</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// SWITCH DE LANGUE
+// ============================================================
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentLang = btn.dataset.lang;
+    if (submissionData) render();
+  });
+});
+
+// ============================================================
+// INITIALISATION
+// ============================================================
+loadSubmission();
+</script>
+
+</body>
+</html>
