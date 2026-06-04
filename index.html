@@ -325,20 +325,92 @@
   }
 
   @media print {
-    body { background: white; padding: 0; }
-    .toolbar { display: none; }
-    .portfolio {
-      box-shadow: none;
-      max-width: 100%;
-      padding: 30px 40px;
-      min-height: auto;
-    }
-    .portfolio::before { display: none; }
-    .section { page-break-inside: avoid; }
-    .choice img { height: 50px; }
-    @page { margin: 1.5cm; size: A4; }
+  body { background: white; padding: 0; }
+  .toolbar { display: none; }
+  
+  .portfolio {
+    box-shadow: none;
+    max-width: 100%;
+    padding: 15px 25px;
+    min-height: auto;
   }
-
+  .portfolio::before { display: none; }
+  
+  .masthead {
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+  }
+  .masthead h1 { font-size: 26px; margin-bottom: 2px; }
+  .masthead .eyebrow { font-size: 9px; margin-bottom: 4px; letter-spacing: 3px; }
+  .masthead .date { font-size: 10px; }
+  
+  .identity {
+    padding: 10px 16px;
+    margin-bottom: 16px;
+  }
+  .identity-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px 16px;
+  }
+  .identity-item .lbl { font-size: 8px; letter-spacing: 1px; }
+  .identity-item .val { font-size: 13px; }
+  
+  .section { 
+    margin-bottom: 14px; 
+    page-break-inside: avoid; 
+  }
+  .section-header {
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    gap: 8px;
+  }
+  .section-num { font-size: 18px; }
+  .section-title { font-size: 16px; }
+  
+  .choices-block { margin-bottom: 8px; }
+  .choices-label { font-size: 9px; margin-bottom: 4px; letter-spacing: 1px; }
+  .choices-grid { 
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 5px;
+  }
+  .choice { 
+    padding: 4px;
+  }
+  .choice img { 
+    height: 35px; 
+    margin-bottom: 3px;
+  }
+  .choice .name { 
+    font-size: 9px;
+    line-height: 1.2;
+  }
+  
+  .top3 {
+    padding: 10px 14px;
+    margin-bottom: 8px;
+  }
+  .top3-title { font-size: 9px; margin-bottom: 7px; }
+  .top3-list { gap: 7px; }
+  .top3-item { 
+    padding: 6px 8px; 
+    min-width: 100px;
+  }
+  .top3-item .medal { font-size: 20px; margin-bottom: 2px; }
+  .top3-item .name { font-size: 13px; margin-bottom: 2px; }
+  .top3-item .score { font-size: 9px; }
+  
+  .pro-block {
+    margin-bottom: 8px;
+    padding: 8px 12px;
+  }
+  .pro-block .label { font-size: 9px; margin-bottom: 3px; }
+  .pro-block .value { font-size: 13px; }
+  
+  @page { 
+    margin: 0.8cm; 
+    size: A4; 
+  }
+}
   @media (max-width: 600px) {
     .portfolio { padding: 30px 24px; }
     .masthead h1 { font-size: 30px; }
