@@ -405,7 +405,7 @@
 // ============================================================
 // CONFIGURATION — REMPLACEZ CES 2 VALEURS PAR LES VÔTRES
 // ============================================================
-const API_KEY = "9cbd77eba6bfd784d9b13b9041f4c593";
+const API_KEY = "a1d2fc5caa20251972125d2ec05deb38";
 const FORM_ID = "261413229737054";
 // ============================================================
 
@@ -574,7 +574,7 @@ async function loadSubmission() {
   }
 
   try {
-    const url = `https://api.jotform.com/submission/${submissionId}?apiKey=${9cbd77eba6bfd784d9b13b9041f4c593}`;
+    const url = `https://api.jotform.com/submission/${submissionId}?apiKey=${API_KEY}`;
     const response = await fetch(url);
     if (!response.ok) throw new Error('API error ' + response.status);
     const data = await response.json();
