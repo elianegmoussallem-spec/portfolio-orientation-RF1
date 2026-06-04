@@ -619,29 +619,26 @@ function getNumber(uniqueName) {
 }
 
 // Récupère un tableau de choix multi avec leurs images
+// Le format Jotform est : "NomDuChoix|URLdelImage" pour chaque réponse
 function getChoicesWithImages(uniqueName) {
   const f = getFieldValue(uniqueName);
   if (!f) return [];
   let answers = f.answer;
+  if (!answers) return [];
   if (typeof answers === 'string') answers = [answers];
   if (!Array.isArray(answers)) answers = Object.values(answers || {});
 
-  // Tentative d'extraction des images depuis prettyFormat (HTML)
-  const pretty = f.prettyFormat || '';
-  const imgMap = {};
-  if (pretty) {
-    // Regex robuste pour extraire les src d'images et leurs labels
-    const re = /<img[^>]*src="([^"]+)"[^>]*><\/td>\s*<td[^>]*>([^<]+)/g;
-    let m;
-    while ((m = re.exec(pretty)) !== null) {
-      imgMap[m[2].trim()] = m[1];
+  return answers.map(a => {
+    const str = String(a).trim();
+    const pipeIdx = str.indexOf('|');
+    if (pipeIdx > -1) {
+      return {
+        name: str.substring(0, pipeIdx).trim(),
+        img: str.substring(pipeIdx + 1).trim()
+      };
     }
-  }
-
-  return answers.map(a => ({
-    name: String(a).trim(),
-    img: imgMap[String(a).trim()] || null
-  }));
+    return { name: str, img: null };
+  });
 }
 
 // ============================================================
