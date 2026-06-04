@@ -574,7 +574,7 @@ async function loadSubmission() {
   }
 
   try {
-    const url = `https://api.jotform.com/submission/${submissionId}?apiKey=${API_KEY}`;
+    const url = `https://api.jotform.com/submission/${submissionId}?apiKey=${9cbd77eba6bfd784d9b13b9041f4c593}`;
     const response = await fetch(url);
     if (!response.ok) throw new Error('API error ' + response.status);
     const data = await response.json();
