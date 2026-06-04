@@ -15,7 +15,6 @@
     --paper-warm: #faf7f0;
     --line: #d8d4c8;
     --gold: #b8935a;
-    --gold-soft: #d4b48a;
     --accent: #5a6e8c;
     --highlight: #f4ead8;
   }
@@ -31,7 +30,6 @@
   }
   body[dir="rtl"] { font-family: 'Cairo', 'Inter', sans-serif; }
 
-  /* TOOLBAR */
   .toolbar {
     max-width: 850px;
     margin: 0 auto 25px;
@@ -77,9 +75,7 @@
     transition: all 0.2s;
   }
   .print-btn:hover { background: #a07d44; }
-  .print-btn:disabled { background: var(--line); cursor: not-allowed; }
 
-  /* PORTFOLIO */
   .portfolio {
     max-width: 850px;
     margin: 0 auto;
@@ -100,7 +96,6 @@
     border-radius: 2px;
   }
 
-  /* MASTHEAD */
   .masthead {
     text-align: center;
     border-bottom: 3px double var(--ink);
@@ -108,7 +103,6 @@
     margin-bottom: 36px;
   }
   .masthead .eyebrow {
-    font-family: 'Inter', sans-serif;
     font-size: 11px;
     letter-spacing: 4px;
     text-transform: uppercase;
@@ -133,7 +127,6 @@
     letter-spacing: 1px;
   }
 
-  /* IDENTITY */
   .identity {
     background: var(--paper-warm);
     border: 1px solid var(--line);
@@ -166,7 +159,6 @@
   }
   body[dir="rtl"] .identity-item .val { font-family: 'Cairo', sans-serif; }
 
-  /* SECTION */
   .section { margin-bottom: 34px; }
   .section-header {
     display: flex;
@@ -193,7 +185,6 @@
   body[dir="rtl"] .section-title,
   body[dir="rtl"] .section-num { font-family: 'Cairo', sans-serif; }
 
-  /* CHOICES with images */
   .choices-block { margin-bottom: 18px; }
   .choices-label {
     font-size: 12px;
@@ -214,7 +205,6 @@
     border-radius: 6px;
     padding: 10px;
     text-align: center;
-    transition: transform 0.2s;
   }
   .choice img {
     width: 100%;
@@ -230,45 +220,6 @@
     line-height: 1.3;
   }
 
-  /* TEXT LIST (when no images) */
-  .text-list { margin-bottom: 18px; }
-  .text-list .label {
-    font-size: 12px;
-    color: var(--gold);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-bottom: 8px;
-    font-weight: 600;
-  }
-  .text-list ul {
-    list-style: none;
-    padding-left: 0;
-  }
-  .text-list li {
-    padding: 6px 0 6px 18px;
-    position: relative;
-    font-size: 15px;
-    color: var(--ink);
-    border-bottom: 1px dotted var(--line);
-  }
-  .text-list li:last-child { border-bottom: none; }
-  .text-list li::before {
-    content: '◆';
-    position: absolute;
-    left: 0;
-    color: var(--gold);
-    font-size: 10px;
-    top: 11px;
-  }
-  body[dir="rtl"] .text-list li {
-    padding: 6px 18px 6px 0;
-  }
-  body[dir="rtl"] .text-list li::before {
-    left: auto;
-    right: 0;
-  }
-
-  /* TOP 3 BLOCK */
   .top3 {
     background: var(--paper-warm);
     border: 1px solid var(--line);
@@ -299,7 +250,6 @@
     background: white;
     border: 1px solid var(--line);
     border-radius: 4px;
-    position: relative;
   }
   .top3-item .medal {
     font-size: 32px;
@@ -320,21 +270,34 @@
     font-weight: 600;
   }
 
-  /* PROFESSIONAL */
-  .pro-yes-no {
-    display: inline-block;
-    padding: 4px 14px;
-    background: var(--ink);
-    color: white;
-    border-radius: 14px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    margin-left: 8px;
+  .pro-block {
+    margin-bottom: 18px;
+    padding: 14px 18px;
+    background: var(--paper-warm);
+    border: 1px solid var(--line);
+    border-radius: 4px;
   }
-  body[dir="rtl"] .pro-yes-no { margin-left: 0; margin-right: 8px; }
+  .pro-block .label {
+    font-size: 12px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .pro-block .value {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  body[dir="rtl"] .pro-block .value { font-family: 'Cairo', sans-serif; }
+  .pro-block .value.empty {
+    color: var(--ink-soft);
+    font-style: italic;
+    font-size: 14px;
+  }
 
-  /* LOADING / ERROR */
   .loading, .error {
     text-align: center;
     padding: 60px 20px;
@@ -361,7 +324,6 @@
     font-family: monospace;
   }
 
-  /* PRINT */
   @media print {
     body { background: white; padding: 0; }
     .toolbar { display: none; }
@@ -403,15 +365,12 @@
 
 <script>
 // ============================================================
-// CONFIGURATION — REMPLACEZ CES 2 VALEURS PAR LES VÔTRES
+// CONFIGURATION
 // ============================================================
 const API_KEY = "a1d2fc5caa20251972125d2ec05deb38";
 const FORM_ID = "261413229737054";
 // ============================================================
 
-// ============================================================
-// TRADUCTIONS DES TITRES ET LIBELLÉS (FR / AR / EN)
-// ============================================================
 const T = {
   fr: {
     eyebrow: "Bilan d'orientation",
@@ -420,33 +379,26 @@ const T = {
     age: "Âge",
     school: "Association",
     date: "Délivré le",
-    section1_num: "I",
-    section1: "Mon profil personnel",
-    section2_num: "II",
-    section2: "Mes intérêts professionnels (RIASEC)",
-    section3_num: "III",
-    section3: "Mes intelligences",
-    section4_num: "IV",
-    section4: "Formation professionnelle",
-    characteristics: "Mes caractéristiques",
-    domains: "Mes domaines d'intérêt",
-    skills: "Mes compétences",
-    values: "Mes valeurs",
-    realisations: "Mes réalisations",
-    top3_riasec: "Mon top 3 RIASEC",
-    top3_intel: "Mon top 3 intelligences",
+    section1_num: "I", section1: "Mon profil personnel",
+    section2_num: "II", section2: "Mes intérêts professionnels (RIASEC)",
+    section3_num: "III", section3: "Mes intelligences",
+    section4_num: "IV", section4: "Formation professionnelle",
+    characteristics: "Mes caractéristiques", domains: "Mes domaines d'intérêt",
+    skills: "Mes compétences", values: "Mes valeurs", realisations: "Mes réalisations",
+    top3_riasec: "Mon top 3 RIASEC", top3_intel: "Mon top 3 intelligences",
     interested: "Intéressé(e) par une formation",
     chosen_formations: "Formations choisies",
     knows_pro: "Connaît un professionnel",
     print: "Imprimer / PDF",
     riasec: { R: "Réaliste", I: "Investigateur", A: "Artistique", S: "Social", E: "Entrepreneur", C: "Conventionnel" },
     intel: { ling: "Linguistique", log: "Logico-mathématique", spat: "Spatiale", mus: "Musicale", kin: "Kinesthésique", inter: "Interpersonnelle", intra: "Intrapersonnelle", nat: "Naturaliste" },
-    yes: "Oui",
-    no: "Non",
+    yes: "Oui", no: "Non",
+    pts: "pts",
     loading: "Chargement des données...",
-    error_no_id: "Aucun ID de soumission fourni. Ajoutez ?id=NUMEROsoumission à l'URL.",
+    error_no_id: "Aucun ID de soumission fourni. Ajoutez ?id=NUMERO à l'URL.",
     error_api: "Erreur lors du chargement des données",
-    no_selection: "Aucune sélection"
+    no_selection: "Aucune sélection",
+    not_answered: "Non répondu"
   },
   ar: {
     eyebrow: "تقرير التوجيه",
@@ -455,33 +407,26 @@ const T = {
     age: "العمر",
     school: "الجمعية",
     date: "صدر بتاريخ",
-    section1_num: "١",
-    section1: "ملفي الشخصي",
-    section2_num: "٢",
-    section2: "اهتماماتي المهنية (RIASEC)",
-    section3_num: "٣",
-    section3: "ذكاءاتي",
-    section4_num: "٤",
-    section4: "التدريب المهني",
-    characteristics: "صفاتي",
-    domains: "مجالات اهتمامي",
-    skills: "مهاراتي",
-    values: "قيمي",
-    realisations: "إنجازاتي",
-    top3_riasec: "أعلى ٣ في RIASEC",
-    top3_intel: "أعلى ٣ ذكاءات",
+    section1_num: "١", section1: "ملفي الشخصي",
+    section2_num: "٢", section2: "اهتماماتي المهنية (RIASEC)",
+    section3_num: "٣", section3: "ذكاءاتي",
+    section4_num: "٤", section4: "التدريب المهني",
+    characteristics: "صفاتي", domains: "مجالات اهتمامي",
+    skills: "مهاراتي", values: "قيمي", realisations: "إنجازاتي",
+    top3_riasec: "أعلى ٣ في RIASEC", top3_intel: "أعلى ٣ ذكاءات",
     interested: "مهتم بدورة تدريبية",
     chosen_formations: "التدريبات المختارة",
     knows_pro: "يعرف شخصًا في هذه المهنة",
     print: "طباعة / PDF",
     riasec: { R: "واقعي", I: "باحث", A: "فنّان", S: "اجتماعي", E: "مغامر", C: "تقليدي" },
     intel: { ling: "لغوي", log: "منطقي - رياضي", spat: "مكاني", mus: "موسيقي", kin: "حركي", inter: "تواصلي", intra: "ذاتي", nat: "طبيعي" },
-    yes: "نعم",
-    no: "لا",
+    yes: "نعم", no: "لا",
+    pts: "نقاط",
     loading: "جارٍ تحميل البيانات...",
-    error_no_id: "لم يتم توفير معرّف الإرسال. أضف ?id=رقم_الإرسال إلى الرابط.",
+    error_no_id: "لم يتم توفير معرّف الإرسال. أضف ?id=رقم إلى الرابط.",
     error_api: "خطأ في تحميل البيانات",
-    no_selection: "لا يوجد اختيار"
+    no_selection: "لا يوجد اختيار",
+    not_answered: "لم تتم الإجابة"
   },
   en: {
     eyebrow: "Orientation Report",
@@ -490,69 +435,140 @@ const T = {
     age: "Age",
     school: "Association",
     date: "Issued on",
-    section1_num: "I",
-    section1: "My personal profile",
-    section2_num: "II",
-    section2: "My career interests (RIASEC)",
-    section3_num: "III",
-    section3: "My intelligences",
-    section4_num: "IV",
-    section4: "Professional training",
-    characteristics: "My characteristics",
-    domains: "My areas of interest",
-    skills: "My skills",
-    values: "My values",
-    realisations: "My achievements",
-    top3_riasec: "My top 3 RIASEC",
-    top3_intel: "My top 3 intelligences",
+    section1_num: "I", section1: "My personal profile",
+    section2_num: "II", section2: "My career interests (RIASEC)",
+    section3_num: "III", section3: "My intelligences",
+    section4_num: "IV", section4: "Professional training",
+    characteristics: "My characteristics", domains: "My areas of interest",
+    skills: "My skills", values: "My values", realisations: "My achievements",
+    top3_riasec: "My top 3 RIASEC", top3_intel: "My top 3 intelligences",
     interested: "Interested in training",
     chosen_formations: "Selected trainings",
     knows_pro: "Knows a professional",
     print: "Print / PDF",
     riasec: { R: "Realistic", I: "Investigative", A: "Artistic", S: "Social", E: "Enterprising", C: "Conventional" },
     intel: { ling: "Linguistic", log: "Logical-mathematical", spat: "Spatial", mus: "Musical", kin: "Kinesthetic", inter: "Interpersonal", intra: "Intrapersonal", nat: "Naturalist" },
-    yes: "Yes",
-    no: "No",
+    yes: "Yes", no: "No",
+    pts: "pts",
     loading: "Loading data...",
-    error_no_id: "No submission ID provided. Add ?id=submissionNumber to the URL.",
+    error_no_id: "No submission ID provided. Add ?id=number to the URL.",
     error_api: "Error loading data",
-    no_selection: "No selection"
+    no_selection: "No selection",
+    not_answered: "Not answered"
   }
 };
 
 // ============================================================
-// MAPPING DES CHAMPS JOTFORM (Unique Names dans votre formulaire)
+// MAPPING DES CHAMPS JOTFORM
 // ============================================================
 const FIELDS = {
   name: "Pr_nom_et_Nom",
   age: "age",
-  school: "nomdeLassociation",
+  school: "ecole",  // CORRIGÉ : c'était "nomdeLassociation"
   characteristics: "ltstronggtparmiLes",
   domains: "ltstronggtchoisisLes",
   skills: "ltstronggtchoisisLes21",
   values: "ltstronggtparmiLes22",
   realisations: "ltstronggtlesRealisationsltstronggt",
-  // Scores RIASEC
-  score_R: "score_R",
-  score_I: "score_I",
-  score_A: "score_A",
-  score_S: "score_S",
-  score_E: "score_E",
-  score_C: "score_C",
-  // Scores Intelligences
-  score_ling: "score_linguistique",
-  score_log: "score_logique",
-  score_spat: "score_spatiale",
-  score_mus: "score_musicale",
-  score_kin: "score_kinesthesique",
-  score_inter: "score_interpersonnelle",
-  score_intra: "score_intrapersonnelle",
-  score_nat: "score_naturaliste",
-  // Formation
-  interested: "formationProfessionnelle",
+  score_R: "score_R", score_I: "score_I", score_A: "score_A",
+  score_S: "score_S", score_E: "score_E", score_C: "score_C",
+  score_ling: "score_linguistique", score_log: "score_logique",
+  score_spat: "score_spatiale", score_mus: "score_musicale",
+  score_kin: "score_kinesthesique", score_inter: "score_interpersonnelle",
+  score_intra: "score_intrapersonnelle", score_nat: "score_naturaliste",
+  interested: "interesse_formation",  // CORRIGÉ : c'était "formationProfessionnelle" (qui est un header)
   formations: "parmiCes",
   knows_pro: "connaistuQuelquun"
 };
+
+// ============================================================
+// DICTIONNAIRE DE TRADUCTION DES CHOIX
+// Format : "expression française" : { ar: "...", en: "..." }
+// ============================================================
+const CHOICES_DICT = {
+  // Caractéristiques
+  "Ambitieux(se)": { ar: "طموح", en: "Ambitious" },
+  "Créatif(ve)": { ar: "مبدع", en: "Creative" },
+  "Organisé(e)": { ar: "منظّم", en: "Organized" },
+  "Empathique": { ar: "متعاطف", en: "Empathetic" },
+  "Persévérant(e)": { ar: "مثابر", en: "Persevering" },
+  "Sociable": { ar: "اجتماعي", en: "Sociable" },
+  "Responsable": { ar: "مسؤول", en: "Responsible" },
+  "Calme": { ar: "هادئ", en: "Calm" },
+  "Attentif(ve)": { ar: "منتبه", en: "Attentive" },
+  "Coopérant(e)": { ar: "متعاون", en: "Cooperative" },
+  "Coopérant (e)": { ar: "متعاون", en: "Cooperative" },
+  "Timide": { ar: "خجول", en: "Shy" },
+
+  // Domaines
+  "Technique et maintenance": { ar: "التقنيات والصيانة", en: "Technical and maintenance" },
+  "Cuisine et alimentation": { ar: "الطبخ والغذاء", en: "Cooking and food" },
+  "Habillement et esthétique": { ar: "الملبس والتجميل", en: "Clothing and beauty" },
+  "construction et travail physique": { ar: "البناء والعمل اليدوي", en: "Construction and physical work" },
+  "Construction et travail physique": { ar: "البناء والعمل اليدوي", en: "Construction and physical work" },
+  "Nature et environnement": { ar: "الطبيعة والبيئة", en: "Nature and environment" },
+
+  // Compétences
+  "Je sais réparer des choses simples": { ar: "أعرف إصلاح أشياء بسيطة", en: "I can repair simple things" },
+  "Je sais construire ou assembler des objets": { ar: "أعرف بناء وتركيب الأشياء", en: "I can build or assemble objects" },
+  "J'apprends vite de nouvelles choses": { ar: "أتعلّم بسرعة", en: "I learn new things quickly" },
+  "J\u2019apprends vite de nouvelles choses": { ar: "أتعلّم بسرعة", en: "I learn new things quickly" },
+  "Je sais regarder et reproduire une action": { ar: "أعرف مراقبة وتكرار حركة", en: "I can watch and reproduce an action" },
+  "Je sais écouter et suivre des consignes": { ar: "أعرف الإصغاء واتّباع التعليمات", en: "I can listen and follow instructions" },
+  "Je sais travailler avec les autres": { ar: "أعرف العمل مع الآخرين", en: "I can work with others" },
+  "Je sais rester calme dans une activité": { ar: "أعرف البقاء هادئًا", en: "I stay calm during activities" },
+  "Je sais me concentrer sur une tâche": { ar: "أعرف التركيز على مهمّة", en: "I can focus on a task" },
+  "Je sais cuisiner des plats simples": { ar: "أعرف طبخ أطباق بسيطة", en: "I can cook simple dishes" },
+
+  // Valeurs
+  "Avoir un bon salaire": { ar: "الحصول على راتب جيّد", en: "Good salary" },
+  "Aider ma famille": { ar: "مساعدة عائلتي", en: "Help my family" },
+  "Être respecté": { ar: "أن أكون محترمًا", en: "Be respected" },
+  "Avoir un travail stable": { ar: "عمل ثابت", en: "Stable job" },
+  "Être indépendant": { ar: "أن أكون مستقلًا", en: "Be independent" },
+  "Avoir un métier simple à apprendre": { ar: "مهنة سهلة التعلّم", en: "Easy-to-learn job" },
+  "Travailler près de chez moi": { ar: "العمل قرب منزلي", en: "Work near home" },
+  "Avoir un avenir meilleur": { ar: "مستقبل أفضل", en: "Better future" },
+
+  // Réalisations
+  "J'ai cuisiné ou fait un gâteau": { ar: "طبختُ أو حضّرت حلوى", en: "I cooked or baked a cake" },
+  "J'ai pris soin d'un animalou d'une plante": { ar: "اعتنيتُ بحيوان أو نبتة", en: "I took care of an animal or plant" },
+  "J'ai pris soin d'un animal ou d'une plante": { ar: "اعتنيتُ بحيوان أو نبتة", en: "I took care of an animal or plant" },
+  "J'ai réparé ou fabriqué quelque chose": { ar: "أصلحتُ أو صنعتُ شيئًا", en: "I repaired or made something" },
+  "J'ai aidé un ami ou un voisin": { ar: "ساعدتُ صديقًا أو جارًا", en: "I helped a friend or neighbor" },
+  "J'ai fini un dessin ou unobjet créatif": { ar: "أنجزتُ رسمًا أو عملًا إبداعيًا", en: "I finished a drawing or creative object" },
+  "J'ai fini un dessin ou un objet créatif": { ar: "أنجزتُ رسمًا أو عملًا إبداعيًا", en: "I finished a drawing or creative object" },
+  "J'ai appris quelque chosetout(e) seul(e) (vélo, sport, chanson…)": { ar: "تعلّمتُ شيئًا بمفردي", en: "I learned something by myself" },
+  "J'ai appris quelque chose tout(e) seul(e) (vélo, sport, chanson…)": { ar: "تعلّمتُ شيئًا بمفردي", en: "I learned something by myself" },
+  "J'ai vendu ou acheté quelque chose": { ar: "بعتُ أو اشتريتُ شيئًا", en: "I sold or bought something" },
+  "J'ai travaillé pour gagner de l'argent": { ar: "عملتُ لكسب المال", en: "I worked to earn money" },
+  "J'ai aidé dans un commerce(épicerie, atelier, ferme)": { ar: "ساعدتُ في محل تجاري", en: "I helped in a shop" },
+  "J'ai aidé dans un commerce (épicerie, atelier, ferme)": { ar: "ساعدتُ في محل تجاري", en: "I helped in a shop" },
+
+  // Formations professionnelles
+  "Couturier(ère)": { ar: "خيّاط", en: "Tailor" },
+  "Électricien(ne)": { ar: "كهربائي", en: "Electrician" },
+  "Coiffeur(se)": { ar: "حلاق", en: "Hairdresser" },
+  "Esthéticien(ne)": { ar: "خبير تجميل", en: "Beautician" },
+  "Menuisier": { ar: "نجّار", en: "Carpenter" },
+  "Pâtissier-Boulanger": { ar: "حلواني", en: "Pastry chef" },
+  "Agriculteur(trice)": { ar: "مزارع", en: "Farmer" },
+  "Fleuriste": { ar: "بائع ورود", en: "Florist" },
+  "Plombier": { ar: "سنكري", en: "Plumber" },
+  "Installation énergie solaire": { ar: "تركيب طاقة شمسية", en: "Solar panel installation" },
+
+  // Oui / Non
+  "Oui": { ar: "نعم", en: "Yes" },
+  "Non": { ar: "لا", en: "No" }
+};
+
+// Fonction de traduction d'un choix
+function translateChoice(text, lang) {
+  if (lang === 'fr') return text;
+  const entry = CHOICES_DICT[text];
+  if (!entry) return text; // Pas de traduction dispo : on garde le français
+  return entry[lang] || text;
+}
 
 // ============================================================
 // ÉTAT GLOBAL
@@ -561,7 +577,7 @@ let submissionData = null;
 let currentLang = 'fr';
 
 // ============================================================
-// CHARGEMENT DES DONNÉES
+// CHARGEMENT
 // ============================================================
 async function loadSubmission() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -596,7 +612,7 @@ function showError(message) {
 }
 
 // ============================================================
-// EXTRACTION DES DONNÉES D'UN CHAMP
+// EXTRACTION DES DONNÉES
 // ============================================================
 function getFieldValue(uniqueName) {
   if (!submissionData || !submissionData.answers) return null;
@@ -610,7 +626,7 @@ function getFieldValue(uniqueName) {
 function getText(uniqueName) {
   const f = getFieldValue(uniqueName);
   if (!f) return '';
-  return f.answer || f.prettyFormat || '';
+  return f.answer || '';
 }
 
 function getNumber(uniqueName) {
@@ -618,13 +634,12 @@ function getNumber(uniqueName) {
   return v ? parseInt(v) || 0 : 0;
 }
 
-// Récupère un tableau de choix multi avec leurs images
-// Le format Jotform est : "NomDuChoix|URLdelImage" pour chaque réponse
+// Récupère un tableau de choix avec leurs images
+// Format Jotform : "NomDuChoix|URLdelImage"
 function getChoicesWithImages(uniqueName) {
   const f = getFieldValue(uniqueName);
-  if (!f) return [];
+  if (!f || !f.answer) return [];
   let answers = f.answer;
-  if (!answers) return [];
   if (typeof answers === 'string') answers = [answers];
   if (!Array.isArray(answers)) answers = Object.values(answers || {});
 
@@ -641,11 +656,15 @@ function getChoicesWithImages(uniqueName) {
   });
 }
 
-// ============================================================
-// CALCUL DU TOP 3
-// ============================================================
+// Récupère un seul choix Oui/Non avec son image
+// Renvoie { name, img } ou null
+function getSingleChoiceWithImage(uniqueName) {
+  const arr = getChoicesWithImages(uniqueName);
+  if (arr.length === 0) return null;
+  return arr[0];
+}
+
 function computeTop3(scoresArray) {
-  // scoresArray: [ { key:'R', label:'Réaliste', value:5 }, ... ]
   return scoresArray
     .filter(s => s.value > 0)
     .sort((a, b) => b.value - a.value)
@@ -653,7 +672,7 @@ function computeTop3(scoresArray) {
 }
 
 // ============================================================
-// RENDU PRINCIPAL
+// RENDU
 // ============================================================
 function render() {
   const t = T[currentLang];
@@ -666,7 +685,6 @@ function render() {
     { day: 'numeric', month: 'long', year: 'numeric' }
   );
 
-  // RIASEC scores
   const riasecScores = [
     { key: 'R', label: t.riasec.R, value: getNumber(FIELDS.score_R) },
     { key: 'I', label: t.riasec.I, value: getNumber(FIELDS.score_I) },
@@ -677,7 +695,6 @@ function render() {
   ];
   const topRiasec = computeTop3(riasecScores);
 
-  // Intelligences scores
   const intelScores = [
     { key: 'ling', label: t.intel.ling, value: getNumber(FIELDS.score_ling) },
     { key: 'log', label: t.intel.log, value: getNumber(FIELDS.score_log) },
@@ -690,7 +707,6 @@ function render() {
   ];
   const topIntel = computeTop3(intelScores);
 
-  // Choices with images
   const characteristics = getChoicesWithImages(FIELDS.characteristics);
   const domains = getChoicesWithImages(FIELDS.domains);
   const skills = getChoicesWithImages(FIELDS.skills);
@@ -698,8 +714,8 @@ function render() {
   const realisations = getChoicesWithImages(FIELDS.realisations);
   const formations = getChoicesWithImages(FIELDS.formations);
 
-  const interested = getText(FIELDS.interested);
-  const knowsPro = getText(FIELDS.knows_pro);
+  const interested = getSingleChoiceWithImage(FIELDS.interested);
+  const knowsPro = getSingleChoiceWithImage(FIELDS.knows_pro);
 
   const html = `
     <div class="portfolio">
@@ -759,19 +775,9 @@ function render() {
           <span class="section-num">${t.section4_num}</span>
           <span class="section-title">${t.section4}</span>
         </div>
-        <div class="choices-block">
-          <div class="choices-label">${t.interested}</div>
-          <div style="padding: 8px 0 12px;">
-            <span class="pro-yes-no">${interested || '—'}</span>
-          </div>
-        </div>
+        ${renderProBlock(t.interested, interested, t.not_answered)}
         ${formations.length > 0 ? renderChoicesBlock(t.chosen_formations, formations, t.no_selection) : ''}
-        <div class="choices-block">
-          <div class="choices-label">${t.knows_pro}</div>
-          <div style="padding: 8px 0;">
-            <span class="pro-yes-no">${knowsPro || '—'}</span>
-          </div>
-        </div>
+        ${renderProBlock(t.knows_pro, knowsPro, t.not_answered)}
       </section>
     </div>
   `;
@@ -788,27 +794,34 @@ function renderChoicesBlock(label, items, emptyMessage) {
       </div>
     `;
   }
-  const withImages = items.some(it => it.img);
-  if (withImages) {
+  return `
+    <div class="choices-block">
+      <div class="choices-label">${label}</div>
+      <div class="choices-grid">
+        ${items.map(it => `
+          <div class="choice">
+            ${it.img ? `<img src="${it.img}" alt="" onerror="this.style.display='none'">` : ''}
+            <div class="name">${translateChoice(it.name, currentLang)}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderProBlock(label, item, emptyMessage) {
+  if (!item) {
     return `
-      <div class="choices-block">
-        <div class="choices-label">${label}</div>
-        <div class="choices-grid">
-          ${items.map(it => `
-            <div class="choice">
-              ${it.img ? `<img src="${it.img}" alt="${it.name}" onerror="this.style.display='none'">` : ''}
-              <div class="name">${it.name}</div>
-            </div>
-          `).join('')}
-        </div>
+      <div class="pro-block">
+        <div class="label">${label}</div>
+        <div class="value empty">${emptyMessage}</div>
       </div>
     `;
   }
-  // Pas d'images → liste texte
   return `
-    <div class="text-list">
+    <div class="pro-block">
       <div class="label">${label}</div>
-      <ul>${items.map(it => `<li>${it.name}</li>`).join('')}</ul>
+      <div class="value">${translateChoice(item.name, currentLang)}</div>
     </div>
   `;
 }
@@ -826,7 +839,7 @@ function renderTop3(title, top3) {
           <div class="top3-item">
             <span class="medal">${medals[i]}</span>
             <div class="name">${s.label}</div>
-            <div class="score">${s.value} pts</div>
+            <div class="score">${s.value} ${T[currentLang].pts}</div>
           </div>
         `).join('')}
       </div>
@@ -834,9 +847,6 @@ function renderTop3(title, top3) {
   `;
 }
 
-// ============================================================
-// SWITCH DE LANGUE
-// ============================================================
 document.querySelectorAll('.lang-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
@@ -846,9 +856,6 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
   });
 });
 
-// ============================================================
-// INITIALISATION
-// ============================================================
 loadSubmission();
 </script>
 
