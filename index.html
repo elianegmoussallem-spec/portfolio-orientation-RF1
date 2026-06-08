@@ -873,31 +873,55 @@ async function downloadPDF() {
   const name = document.querySelector('.val')?.textContent?.trim() || 'portfolio';
   const isRTL = document.body.dir === 'rtl';
 
-  // Sauvegarde l'état
-  const origBodyBg  = document.body.style.background;
-  const origBodyPad = document.body.style.padding;
-  const origWidth   = portfolio.style.width;
-  const origMaxW    = portfolio.style.maxWidth;
-  const origDir     = portfolio.style.direction;
-  const origTransform = portfolio.style.transform;
-
-  document.body.style.background = 'white';
-  document.body.style.padding = '0';
+  // Cache toolbar et bouton PDF pendant la capture
   document.getElementById('pdf-btn').style.display = 'none';
   document.querySelector('.toolbar').style.display = 'none';
 
-  portfolio.style.width = '850px';
-  portfolio.style.maxWidth = '850px';
-
-  // Pour l'arabe : on force direction ltr sur le portfolio
-  // mais on garde le contenu tel quel (html2canvas a un bug avec dir=rtl)
-  if (isRTL) {
-    portfolio.style.direction = 'ltr';
-    portfolio.style.transform = 'scaleX(-1)';
-  }
-
   try {
-    const canvas = await html2canvas(portfolio, {
+    // Clone le portfolio dans un conteneur hors-écran avec LTR forcé
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = `
+      position: fixed;
+      top: -9999px;
+      left: 0;
+      width: 850px;
+      background: white;
+      direction: ltr;
+      font-family: ${isRTL ? "'Cairo', sans-serif" : "'Inter', sans-serif"};
+    `;
+
+    const clone = portfolio.cloneNode(true);
+    clone.style.width = '850px';
+    clone.style.maxWidth = '850px';
+    clone.style.boxShadow = 'none';
+    clone.style.margin = '0';
+
+    // Si arabe : force direction RTL correcte sur le clone
+    if (isRTL) {
+      clone.style.direction = 'rtl';
+      clone.setAttribute('dir', 'rtl');
+      // Force RTL sur tous les enfants texte
+      clone.querySelectorAll('*').forEach(el => {
+        const cs = window.getComputedStyle(el);
+        if (cs.direction === 'rtl' || el.closest('[dir="rtl"]')) {
+          el.style.direction = 'rtl';
+          el.style.textAlign = el.style.textAlign || 'right';
+        }
+      });
+    }
+
+    wrapper.appendChild(clone);
+    document.body.appendChild(wrapper);
+
+    // Attend que les images chargent
+    await Promise.all(
+      [...clone.querySelectorAll('img')].map(img =>
+        img.complete ? Promise.resolve() :
+        new Promise(res => { img.onload = res; img.onerror = res; })
+      )
+    );
+
+    const canvas = await html2canvas(wrapper, {
       scale: 2,
       useCORS: true,
       allowTaint: true,
@@ -905,30 +929,19 @@ async function downloadPDF() {
       width: 850,
       windowWidth: 900,
       logging: false,
-      foreignObjectRendering: false,
-      ignoreElements: (el) => el.id === 'pdf-btn'
+      foreignObjectRendering: true
     });
 
-    // Pour l'arabe : on re-flip l'image capturée pour corriger le miroir
-    let finalCanvas = canvas;
-    if (isRTL) {
-      finalCanvas = document.createElement('canvas');
-      finalCanvas.width = canvas.width;
-      finalCanvas.height = canvas.height;
-      const ctx = finalCanvas.getContext('2d');
-      ctx.translate(canvas.width, 0);
-      ctx.scale(-1, 1);
-      ctx.drawImage(canvas, 0, 0);
-    }
+    document.body.removeChild(wrapper);
 
-    const imgData = finalCanvas.toDataURL('image/jpeg', 0.97);
+    const imgData = canvas.toDataURL('image/jpeg', 0.97);
 
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
     const pdfW = pdf.internal.pageSize.getWidth();
     const pdfH = pdf.internal.pageSize.getHeight();
 
-    const ratio = finalCanvas.height / finalCanvas.width;
+    const ratio = canvas.height / canvas.width;
     let imgW = pdfW;
     let imgH = pdfW * ratio;
     if (imgH > pdfH) { imgH = pdfH; imgW = pdfH / ratio; }
@@ -938,12 +951,6 @@ async function downloadPDF() {
     pdf.save(name + '.pdf');
 
   } finally {
-    document.body.style.background = origBodyBg;
-    document.body.style.padding = origBodyPad;
-    portfolio.style.width = origWidth;
-    portfolio.style.maxWidth = origMaxW;
-    portfolio.style.direction = origDir;
-    portfolio.style.transform = origTransform;
     document.getElementById('pdf-btn').style.display = '';
     document.querySelector('.toolbar').style.display = '';
     btn.disabled = false;
