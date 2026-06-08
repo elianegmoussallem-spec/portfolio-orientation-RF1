@@ -325,18 +325,71 @@
   }
 
   @media print {
-    body { background: white; padding: 0; }
-    .toolbar { display: none; }
-    .portfolio {
-      box-shadow: none;
-      max-width: 100%;
-      padding: 30px 40px;
-      min-height: auto;
+    @page {
+      size: A4 portrait;
+      margin: 0;
     }
-    .portfolio::before { display: none; }
-    .section { page-break-inside: avoid; }
-    .choice img { height: 50px; }
-    @page { margin: 1.5cm; size: A4; }
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    html, body {
+      width: 210mm;
+      height: 297mm;
+      margin: 0;
+      padding: 0;
+      background: white !important;
+      overflow: hidden;
+    }
+    .toolbar { display: none !important; }
+    #content {
+      width: 210mm;
+      height: 297mm;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    .portfolio {
+      box-shadow: none !important;
+      border-radius: 0 !important;
+      margin: 0 !important;
+      padding: 10mm 12mm !important;
+      width: 210mm !important;
+      max-width: 210mm !important;
+      min-height: unset !important;
+      /* Zoom automatique pour tenir sur 1 page */
+      transform: scale(var(--print-scale, 0.62));
+      transform-origin: top center;
+    }
+    .portfolio::before { display: none !important; }
+    /* Tailles réduites pour tenir en 1 page */
+    .masthead { padding-bottom: 8px !important; margin-bottom: 10px !important; }
+    .masthead h1 { font-size: 24px !important; }
+    .masthead .eyebrow { font-size: 9px !important; }
+    .masthead .date { font-size: 9px !important; }
+    .identity { padding: 10px 14px !important; margin-bottom: 10px !important; }
+    .identity-item .val { font-size: 14px !important; }
+    .identity-item .lbl { font-size: 8px !important; }
+    .section { margin-bottom: 8px !important; }
+    .section-header { margin-bottom: 6px !important; padding-bottom: 4px !important; }
+    .section-num { font-size: 16px !important; }
+    .section-title { font-size: 13px !important; }
+    .choices-label { font-size: 9px !important; margin-bottom: 4px !important; }
+    .choices-block { margin-bottom: 6px !important; }
+    .choices-grid { grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)) !important; gap: 5px !important; }
+    .choice { padding: 5px !important; }
+    .choice img { height: 38px !important; margin-bottom: 3px !important; }
+    .choice .name { font-size: 9px !important; }
+    .top3 { padding: 8px 12px !important; margin-bottom: 6px !important; }
+    .top3-title { font-size: 9px !important; margin-bottom: 6px !important; }
+    .top3-item { padding: 6px 8px !important; min-width: 80px !important; }
+    .top3-item .medal { font-size: 20px !important; margin-bottom: 2px !important; }
+    .top3-item .name { font-size: 12px !important; }
+    .top3-item .score { font-size: 9px !important; }
+    .pro-block { padding: 6px 10px !important; margin-bottom: 5px !important; }
+    .pro-block .label { font-size: 9px !important; }
+    .pro-block .value { font-size: 13px !important; }
   }
 
   @media (max-width: 600px) {
@@ -357,7 +410,7 @@
     <button class="lang-btn" data-lang="en">🇬🇧 English</button>
   </div>
   <button class="print-btn" onclick="window.print()">🖨️ <span id="print-label">Imprimer / PDF</span></button>
-  <button class="print-btn" id="pdf-btn" onclick="downloadPDF()" style="background:#5a6e8c;">📄 <span id="pdf-label">Télécharger PDF 1 page</span></button>
+  <button class="print-btn" id="pdf-btn" onclick="window.print()" style="background:#5a6e8c;">📄 <span id="pdf-label">Télécharger PDF 1 page</span></button>
 </div>
 
 <div id="content">
@@ -858,105 +911,6 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 });
 
 loadSubmission();
-</script>
-
-<!-- Librairies PDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-async function downloadPDF() {
-  const btn = document.getElementById('pdf-btn');
-  btn.disabled = true;
-  btn.textContent = '⏳ Génération...';
-
-  const portfolio = document.querySelector('.portfolio');
-  const name = document.querySelector('.val')?.textContent?.trim() || 'portfolio';
-  const isRTL = document.body.dir === 'rtl';
-
-  // Cache toolbar et bouton PDF pendant la capture
-  document.getElementById('pdf-btn').style.display = 'none';
-  document.querySelector('.toolbar').style.display = 'none';
-
-  try {
-    // Clone le portfolio dans un conteneur hors-écran avec LTR forcé
-    const wrapper = document.createElement('div');
-    wrapper.style.cssText = `
-      position: fixed;
-      top: -9999px;
-      left: 0;
-      width: 850px;
-      background: white;
-      direction: ltr;
-      font-family: ${isRTL ? "'Cairo', sans-serif" : "'Inter', sans-serif"};
-    `;
-
-    const clone = portfolio.cloneNode(true);
-    clone.style.width = '850px';
-    clone.style.maxWidth = '850px';
-    clone.style.boxShadow = 'none';
-    clone.style.margin = '0';
-
-    // Si arabe : force direction RTL correcte sur le clone
-    if (isRTL) {
-      clone.style.direction = 'rtl';
-      clone.setAttribute('dir', 'rtl');
-      // Force RTL sur tous les enfants texte
-      clone.querySelectorAll('*').forEach(el => {
-        const cs = window.getComputedStyle(el);
-        if (cs.direction === 'rtl' || el.closest('[dir="rtl"]')) {
-          el.style.direction = 'rtl';
-          el.style.textAlign = el.style.textAlign || 'right';
-        }
-      });
-    }
-
-    wrapper.appendChild(clone);
-    document.body.appendChild(wrapper);
-
-    // Attend que les images chargent
-    await Promise.all(
-      [...clone.querySelectorAll('img')].map(img =>
-        img.complete ? Promise.resolve() :
-        new Promise(res => { img.onload = res; img.onerror = res; })
-      )
-    );
-
-    const canvas = await html2canvas(wrapper, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: '#fefcf8',
-      width: 850,
-      windowWidth: 900,
-      logging: false,
-      foreignObjectRendering: true
-    });
-
-    document.body.removeChild(wrapper);
-
-    const imgData = canvas.toDataURL('image/jpeg', 0.97);
-
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-    const pdfW = pdf.internal.pageSize.getWidth();
-    const pdfH = pdf.internal.pageSize.getHeight();
-
-    const ratio = canvas.height / canvas.width;
-    let imgW = pdfW;
-    let imgH = pdfW * ratio;
-    if (imgH > pdfH) { imgH = pdfH; imgW = pdfH / ratio; }
-
-    const offsetX = (pdfW - imgW) / 2;
-    pdf.addImage(imgData, 'JPEG', offsetX, 0, imgW, imgH);
-    pdf.save(name + '.pdf');
-
-  } finally {
-    document.getElementById('pdf-btn').style.display = '';
-    document.querySelector('.toolbar').style.display = '';
-    btn.disabled = false;
-    btn.textContent = '📄 Télécharger PDF 1 page';
-  }
-}
 </script>
 
 </body>
