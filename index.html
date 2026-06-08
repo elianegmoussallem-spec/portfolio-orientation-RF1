@@ -860,45 +860,84 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 loadSubmission();
 </script>
 
-<!-- html2pdf.js : génère un PDF 1 page depuis le portfolio -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<!-- Librairies PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-function downloadPDF() {
+async function downloadPDF() {
   const btn = document.getElementById('pdf-btn');
   btn.disabled = true;
-  btn.innerHTML = '⏳ Génération...';
+  btn.textContent = '⏳ Génération...';
 
-  const element = document.getElementById('content');
+  const portfolio = document.querySelector('.portfolio');
   const name = document.querySelector('.val')?.textContent?.trim() || 'portfolio';
 
-  // A4 en pixels à 96dpi = 794 x 1123px
-  const a4HeightPx = 1123;
-  const contentHeight = element.scrollHeight;
-  // Calcule le scale pour tout faire tenir sur 1 page
-  const scale = Math.min(1.5, (a4HeightPx / contentHeight) * 1.5);
+  // Sauvegarde l'état actuel
+  const origBodyDir = document.body.dir;
+  const origBodyBg  = document.body.style.background;
+  const origPadding = document.body.style.padding;
 
-  const opt = {
-    margin: 0,
-    filename: name + '.pdf',
-    image: { type: 'jpeg', quality: 0.97 },
-    html2canvas: {
-      scale: scale,
+  // Force LTR + fond blanc pour la capture (corrige le bug RTL)
+  document.body.dir = 'ltr';
+  document.body.style.background = 'white';
+  document.body.style.padding = '0';
+  document.getElementById('pdf-btn').style.display = 'none';
+
+  // Fixe la largeur à 850px pour que le rendu soit propre
+  const origWidth = portfolio.style.width;
+  portfolio.style.width = '850px';
+  portfolio.style.maxWidth = '850px';
+
+  try {
+    const canvas = await html2canvas(portfolio, {
+      scale: 2,
       useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#fefcf8',
+      width: 850,
+      windowWidth: 850,
       logging: false,
-      windowWidth: 850
-    },
-    jsPDF: {
-      unit: 'mm',
-      format: 'a4',
-      orientation: 'portrait'
-    },
-    pagebreak: { mode: 'avoid-all' }
-  };
+      // Force le sens de rendu LTR même en arabe
+      foreignObjectRendering: false
+    });
 
-  html2pdf().set(opt).from(element).save().then(() => {
+    const imgData = canvas.toDataURL('image/jpeg', 0.97);
+
+    // Crée le PDF A4 et fait tenir l'image sur 1 seule page
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+
+    const pdfW = pdf.internal.pageSize.getWidth();   // 210mm
+    const pdfH = pdf.internal.pageSize.getHeight();  // 297mm
+
+    // Calcule la hauteur proportionnelle
+    const ratio = canvas.height / canvas.width;
+    let imgW = pdfW;
+    let imgH = pdfW * ratio;
+
+    // Si ça dépasse 1 page, on réduit pour tout faire tenir
+    if (imgH > pdfH) {
+      imgH = pdfH;
+      imgW = pdfH / ratio;
+    }
+
+    // Centre horizontalement si réduit
+    const offsetX = (pdfW - imgW) / 2;
+    const offsetY = 0;
+
+    pdf.addImage(imgData, 'JPEG', offsetX, offsetY, imgW, imgH);
+    pdf.save(name + '.pdf');
+
+  } finally {
+    // Restaure tout
+    document.body.dir = origBodyDir;
+    document.body.style.background = origBodyBg;
+    document.body.style.padding = origPadding;
+    portfolio.style.width = origWidth;
+    document.getElementById('pdf-btn').style.display = '';
     btn.disabled = false;
-    btn.innerHTML = '📄 Télécharger PDF 1 page';
-  });
+    btn.textContent = '📄 Télécharger PDF 1 page';
+  }
 }
 </script>
 
