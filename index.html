@@ -357,6 +357,7 @@
     <button class="lang-btn" data-lang="en">🇬🇧 English</button>
   </div>
   <button class="print-btn" onclick="window.print()">🖨️ <span id="print-label">Imprimer / PDF</span></button>
+  <button class="print-btn" id="pdf-btn" onclick="downloadPDF()" style="background:#5a6e8c;">📄 <span id="pdf-label">Télécharger PDF 1 page</span></button>
 </div>
 
 <div id="content">
@@ -857,6 +858,48 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 });
 
 loadSubmission();
+</script>
+
+<!-- html2pdf.js : génère un PDF 1 page depuis le portfolio -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+function downloadPDF() {
+  const btn = document.getElementById('pdf-btn');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Génération...';
+
+  const element = document.getElementById('content');
+  const name = document.querySelector('.val')?.textContent?.trim() || 'portfolio';
+
+  // A4 en pixels à 96dpi = 794 x 1123px
+  const a4HeightPx = 1123;
+  const contentHeight = element.scrollHeight;
+  // Calcule le scale pour tout faire tenir sur 1 page
+  const scale = Math.min(1.5, (a4HeightPx / contentHeight) * 1.5);
+
+  const opt = {
+    margin: 0,
+    filename: name + '.pdf',
+    image: { type: 'jpeg', quality: 0.97 },
+    html2canvas: {
+      scale: scale,
+      useCORS: true,
+      logging: false,
+      windowWidth: 850
+    },
+    jsPDF: {
+      unit: 'mm',
+      format: 'a4',
+      orientation: 'portrait'
+    },
+    pagebreak: { mode: 'avoid-all' }
+  };
+
+  html2pdf().set(opt).from(element).save().then(() => {
+    btn.disabled = false;
+    btn.innerHTML = '📄 Télécharger PDF 1 page';
+  });
+}
 </script>
 
 </body>
