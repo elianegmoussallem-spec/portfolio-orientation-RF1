@@ -871,22 +871,30 @@ async function downloadPDF() {
 
   const portfolio = document.querySelector('.portfolio');
   const name = document.querySelector('.val')?.textContent?.trim() || 'portfolio';
+  const isRTL = document.body.dir === 'rtl';
 
-  // Sauvegarde l'état actuel
-  const origBodyDir = document.body.dir;
+  // Sauvegarde l'état
   const origBodyBg  = document.body.style.background;
-  const origPadding = document.body.style.padding;
+  const origBodyPad = document.body.style.padding;
+  const origWidth   = portfolio.style.width;
+  const origMaxW    = portfolio.style.maxWidth;
+  const origDir     = portfolio.style.direction;
+  const origTransform = portfolio.style.transform;
 
-  // Force LTR + fond blanc pour la capture (corrige le bug RTL)
-  document.body.dir = 'ltr';
   document.body.style.background = 'white';
   document.body.style.padding = '0';
   document.getElementById('pdf-btn').style.display = 'none';
+  document.querySelector('.toolbar').style.display = 'none';
 
-  // Fixe la largeur à 850px pour que le rendu soit propre
-  const origWidth = portfolio.style.width;
   portfolio.style.width = '850px';
   portfolio.style.maxWidth = '850px';
+
+  // Pour l'arabe : on force direction ltr sur le portfolio
+  // mais on garde le contenu tel quel (html2canvas a un bug avec dir=rtl)
+  if (isRTL) {
+    portfolio.style.direction = 'ltr';
+    portfolio.style.transform = 'scaleX(-1)';
+  }
 
   try {
     const canvas = await html2canvas(portfolio, {
@@ -895,46 +903,49 @@ async function downloadPDF() {
       allowTaint: true,
       backgroundColor: '#fefcf8',
       width: 850,
-      windowWidth: 850,
+      windowWidth: 900,
       logging: false,
-      // Force le sens de rendu LTR même en arabe
-      foreignObjectRendering: false
+      foreignObjectRendering: false,
+      ignoreElements: (el) => el.id === 'pdf-btn'
     });
 
-    const imgData = canvas.toDataURL('image/jpeg', 0.97);
-
-    // Crée le PDF A4 et fait tenir l'image sur 1 seule page
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-
-    const pdfW = pdf.internal.pageSize.getWidth();   // 210mm
-    const pdfH = pdf.internal.pageSize.getHeight();  // 297mm
-
-    // Calcule la hauteur proportionnelle
-    const ratio = canvas.height / canvas.width;
-    let imgW = pdfW;
-    let imgH = pdfW * ratio;
-
-    // Si ça dépasse 1 page, on réduit pour tout faire tenir
-    if (imgH > pdfH) {
-      imgH = pdfH;
-      imgW = pdfH / ratio;
+    // Pour l'arabe : on re-flip l'image capturée pour corriger le miroir
+    let finalCanvas = canvas;
+    if (isRTL) {
+      finalCanvas = document.createElement('canvas');
+      finalCanvas.width = canvas.width;
+      finalCanvas.height = canvas.height;
+      const ctx = finalCanvas.getContext('2d');
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(canvas, 0, 0);
     }
 
-    // Centre horizontalement si réduit
-    const offsetX = (pdfW - imgW) / 2;
-    const offsetY = 0;
+    const imgData = finalCanvas.toDataURL('image/jpeg', 0.97);
 
-    pdf.addImage(imgData, 'JPEG', offsetX, offsetY, imgW, imgH);
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+    const pdfW = pdf.internal.pageSize.getWidth();
+    const pdfH = pdf.internal.pageSize.getHeight();
+
+    const ratio = finalCanvas.height / finalCanvas.width;
+    let imgW = pdfW;
+    let imgH = pdfW * ratio;
+    if (imgH > pdfH) { imgH = pdfH; imgW = pdfH / ratio; }
+
+    const offsetX = (pdfW - imgW) / 2;
+    pdf.addImage(imgData, 'JPEG', offsetX, 0, imgW, imgH);
     pdf.save(name + '.pdf');
 
   } finally {
-    // Restaure tout
-    document.body.dir = origBodyDir;
     document.body.style.background = origBodyBg;
-    document.body.style.padding = origPadding;
+    document.body.style.padding = origBodyPad;
     portfolio.style.width = origWidth;
+    portfolio.style.maxWidth = origMaxW;
+    portfolio.style.direction = origDir;
+    portfolio.style.transform = origTransform;
     document.getElementById('pdf-btn').style.display = '';
+    document.querySelector('.toolbar').style.display = '';
     btn.disabled = false;
     btn.textContent = '📄 Télécharger PDF 1 page';
   }
